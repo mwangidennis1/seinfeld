@@ -83,15 +83,7 @@ public class Server implements  Runnable{
     /* goes through a list of  socket  objects and sends them a message
     from one of  the clients
      */
-    public void broadcast(String message){
-        for(ConnectionHandler ch:connections){
 
-            if(ch != null){
-
-                ch.sendMessage(message);
-            }
-        }
-    }
     public void broadcast(String message,UUID clientid){
         for(ConnectionHandler ch:connections){
             if(ch != null){
@@ -128,13 +120,13 @@ public class Server implements  Runnable{
                 out.println("Please enter a nickname");
                  String name=in.readLine();
                 
-                broadcast(name + " joined the chat");
+                broadcast(name + " joined the chat",clientId);
                 String message;
                 while((message = in.readLine()) != null){
                     if(message.startsWith("/denno")){
                         String[] messageSplit=message.split(" ",2);
                         if(messageSplit.length ==2){
-                            broadcast(name + " renamed themselves to " + messageSplit[1]);
+                            broadcast(name + " renamed themselves to " + messageSplit[1],clientId);
                             System.out.println(name + " renamed to " + messageSplit[1]);
                             name=messageSplit[1];
                             out.println("Successfully changed name to " + name);
@@ -142,7 +134,7 @@ public class Server implements  Runnable{
                             out.println("No nickname provided");
                         }
                     } else if (message.startsWith("/quit")) {
-                        broadcast(name + " left the chat");
+                        broadcast(name + " left the chat",clientId);
                         shutDown();
                     }else{
                         broadcast(name + ":" + message,clientId);
